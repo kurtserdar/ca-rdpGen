@@ -119,10 +119,10 @@ exit;
                 <div class="col-md-12 form-group mb-3">
                   <label class="col-form-label">PSM Sunucuları</label>
                   <select name="psmControl" class="form-control">
-                    <option value="192.168.5.65">Bostancı PSM</option>
-                    <option value="10.222.254.1">Temelli PSM</option>
-                    <option value="10.122.254.1">Tuzla PSM</option>
-                    <option value="10.180.0.139">GCP PSM</option>
+                    <option value="1.1.1.1">PSM 1</option>
+                    <option value="1.1.1.2">PSM 2</option>
+                    <option value="1.1.1.3">PSM 3</option>
+                    <option value="1.1.1.4">PSM 4</option>
                   </select>
                   <div class="form-text">
                     <small>
