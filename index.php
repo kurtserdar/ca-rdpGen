@@ -1,7 +1,7 @@
 <?php
 if (isset($_POST['fName'])){
 $handle = fopen($_POST['fName'] . ".rdp", "w");
-fwrite($handle, "alternate shell:s:psm /u " . $_POST['pUser'] . "@domain-name.local /a " . $_POST['dIP'] . " /c PSM-RDP\nconnection type:i:7\nfull address:s:".$_POST['psmControl']."\nusername:s:" . $_POST['cUser'] . "\nauthentication level:i:2\nenablecredsspsupport:i:1\nnegotiate security layer:i:1") or die ("Unable to open file!");
+fwrite($handle, "alternate shell:s:psm /u " . $_POST['pUser'] . " /a " . $_POST['dIP'] . " /c " . $_POST['componentControl']."\nconnection type:i:7\nfull address:s:".$_POST['psmControl']."\nusername:s:" . $_POST['cUser'] . "\nauthentication level:i:2\nenablecredsspsupport:i:1\nnegotiate security layer:i:1") or die ("Unable to open file!");
 fclose($handle);
 
 header('Content-Type: application/octet-stream');
@@ -17,143 +17,147 @@ unlink($_POST['fName'] . ".rdp");
 
 exit;
 }
-
  ?>
 
 <!doctype html>
-<html lang="en" class="h-100">
+<html lang="tr">
   <head>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Serdar KURT">
-    <meta name="generator" content="CyberArk RDP Generator">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>RDPGen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="pragma" content="no-cache" />
 
-
-
-
-<link href="assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <!-- Style -->
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Style -->
+    <link rel="stylesheet" href="css/style.css">
+    
     <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
+    .hover_img a { position:relative; }
+    .hover_img a span { position:absolute; display:none; z-index:99; }
+    .hover_img a:hover span { display:block; }
     </style>
 
-    <link href="cover.css" rel="stylesheet">
+
+    <title>RDPGen</title>
   </head>
+  
+  <body>
+  <div class="content">
+    <div class="container">
+      <div class="row align-items-stretch justify-content-center no-gutters">
+        <div class="col-md-7">
+          <div class="form h-100 contact-wrap p-5">
+            <h3 class="text-center">RDPGen</h3>
+            <form class="mb-5" method="post" id="rdpGenForm" name="rdpGenForm">
+              <div class="row">
+                <div class="col-md-12 form-group mb-3">
+                  <label for="" class="col-form-label">CyberArk Hesabı</label>
+                  <input type="text" class="form-control" name="cUser" id="cUser" placeholder="" required>
+                  <div class="hover_img">
+                    <small>
+                      CyberArk hesabınız sahibinden.com.local domain hesabı olmak ile birlikte genelde format <b>"ad.soyad"</b>
+                      şeklindedir.
+                    <a href="#">Örnek<span><img src="images/CyberArk-1.png" alt="image" height="400" /></span></a></small>
+                  </div>
+                </div>
+                
+                <div class="col-md-12 form-group mb-3">
+                  <label for="" class="col-form-label">Sunucu Hesabı</label>
+                  <input type="text" class="form-control" name="pUser" id="pUser" placeholder="" required>  
+                    <div class="hover_img">
+                      <small>
+                      Hedef sunucuya bağlanırken kullandığınız ayrıcalıklı hedef hesabıdır. CyberArk kasasında saklanmaktadır.
+                      Eğer ilgili hesap domain hesabı ise <b>hesap@sahibinden.com.local</b> formatında girilmelidir.
+                      <a href="#">Örnek<span><img src="images/CyberArk-2.png" alt="image" height="150" /></span></a></small>
+                    </div>
+                  </div>
+                </div>
 
+              <div class="row">
+                <div class="col-md-12 form-group mb-3">
+                <label for="" class="col-form-label">Hedef Sunucu / Uygulama</label>
+                <input type="text" class="form-control" name="dIP" id="dIP" placeholder="" required>
+                <div class="form-text">
+                    <small>
+                    Bağlantı yapmak istediğiniz sunucu <b>IP/Hostname/FQDN</b> adresi.
+                    </small>
+                 </div>
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                <label class="col-form-label">Bağlantı Tipi</label>
+                <select name="componentControl" class="form-control">
+                  <option value="PSM-RDP">RDP</option>
+                  <option value="PSM-SSH">SSH</option>
+                  <option value="PSM-SQLServerMgmtStudio">MSSQL</option>
+                  <option value="PSM-OpenShift">OpenShift - Chrome</option>
+                  <option value="PSM-QlikView">QlikView - Chrome</option>
+                  <option value="PSM-Fortigate">Fortigate - Chrome</option>
+                  <option value="PSM-F5">F5 - Chrome</option>
+                  <option value="PSM-Exchange">Exchange Admin - Chrome</option>
+                  <option value="PSM-MDMAdmin">MDM Admin - Chrome</option>
+                  <option value="PSM-Proofpoint">Proofpoint - Chrome</option>
+                  <option value="PSM-Proofpoint-IE">Proofpoint - IE</option>
+                  <option value="PSM-SEP">Symantec Endpoint Protection Manager - Client</option>
+                  <option value="PSM-PVWA-v10">CyberArk PVWA - Chrome</option>
+                  <option value="PSM-PTA-Chrome">CyberArk PTA - Chrome</option>
+                  <option value="PSM-VMware-vSphere">VMWare vSPhere - Chrome</option>
+                  <option value="PSM-UiPath">UiPath Orchestrator - Chrome</option>
+                  <option value="PSM-Nessus">Nessus - Chrome</option>
+                </select>
+                <div class="form-text">
+                    <small>
+                    Hedef sunucuya bağlantı tipi?
+                    </small>
+                 </div>
+                </div>
+              </div>
 
-  <body class="d-flex h-100 text-center text-white bg-dark">
-<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-  <header class="mb-auto">
-    <div>
-      <h3 class="float-md-start mb-0">RDPGen</h3>
-      <nav class="nav nav-masthead justify-content-center float-md-end">
-      <a class="nav-link active" aria-current="page" href="index.php">Ana Sayfa</a>
-      </nav>
-    </div>
-  </header>
-  <hr>
-
-  <main class="px-3">
-    <h2></h2>
-    <form action="" method="POST">
-  <div class="row mb-4">
-    <div class="col">
-      <div class="form-outline">
-        <label class="form-label">CyberArk Hesabı</label>
-        <input type="text" required maxlength="41" name="cUser" class="form-control" autocomplete="off" oninvalid="this.setCustomValidity('Doldurulması zorunlu alan')" oninput="setCustomValidity('')"/>
-
-        <div class="form-text">
-    CyberArk hesabınız sahibinden.com.local domain hesabı olmak ile birlikte genelde format "ad.soyad" şeklindedir.
+              <div class="row mb-5">
+                <div class="col-md-12 form-group mb-3">
+                  <label class="col-form-label">PSM Sunucuları</label>
+                  <select name="psmControl" class="form-control">
+                    <option value="192.168.5.65">Bostancı PSM</option>
+                    <option value="10.222.254.1">Temelli PSM</option>
+                    <option value="10.122.254.1">Tuzla PSM</option>
+                    <option value="10.180.0.139">GCP PSM</option>
+                  </select>
+                  <div class="form-text">
+                    <small>
+                    Hangi CyberArk proxy sunucusu üzerinden bağlantı sağlanacak? <b>(Web Uygulamaları için Bostancı seçilmelidir.)</b>
+                    </small>
+                 </div>
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                  <label for="" class="col-form-label">Dosya Adı *</label>
+                    <input type="text" class="form-control" name="fName" id="fName" placeholder="" required>
+                    <div class="form-text">
+                    <small>
+                    RDP dosyasını hangi isimle oluşturmak istersin?
+                    </small>
+                 </div>
+                  </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-md-5 form-group text-center">
+                  <input type="submit" value="RDP Dosyası Oluştur" class="btn btn-block btn-primary rounded-0 py-2 px-10">
+                </div>
+                
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col">
-      <div class="form-outline">
-        <label class="form-label">Sunucu Hesabı</label>
-        <input type="text" required maxlength="41" name="pUser" class="form-control" autocomplete="off" oninvalid="this.setCustomValidity('Doldurulması zorunlu alan')" oninput="setCustomValidity('')"/>
-      </div>
-      <div class="form-text">
-  Hedef sunucuya bağlanırken kullandığınız ayrıcalıklı hedef hesabıdır. CyberArk kasasında saklanmaktadır.
-      </div>
-    </div>
   </div>
+    
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/main.js"></script>
 
-  <!-- Text input -->
-  <div class="form-outline mb-4">
-    <label class="form-label">Hedef Sunucu IP</label>
-    <input type="text" required maxlength="41" name="dIP" class="form-control" autocomplete="off" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$" oninvalid="this.setCustomValidity('Doldurulması zorunlu alan / IP formatına uygun mu?')" oninput="setCustomValidity('')"/>
-    <div class="form-text">
-RDP yapmak istediğiniz sunucu IP adresi.
-    </div>
-  </div>
-
-
-<div class="form-outline mb-4">
-  <label class="form-label">Bağlantı Tipi</label>
-  <select name="componentControl" class="form-control">
-  <option value="PSM-RDP">RDP</option>
-  </select>
-  <div class="form-text">
-  Hedef sunucuya bağlantı tipi?
-  </div>
-</div>
-
-
-
-<div class="form-outline mb-4">
-  <label class="form-label">PSM Sunucuları</label>
-  <select name="psmControl" class="form-control">
-  <option value="1.1.1.1">Istanbul PSM</option>
-  <option value="2.2.2.2">Ankara PSM</option>
-  <option value="3.3.3.3">Izmir PSM</option>
-  <option value="4.4.4.4">Adana PSM</option>
-  </select>
-  <div class="form-text">
-  Hangi CyberArk proxy sunucusu üzerinden bağlantı sağlanacak?
-  </div>
-</div>
-
-  <!-- Submit button -->
-  <div class="form-outline mb-4">
-    <label class="form-label">Dosya Adı</label>
-    <input type="text" required maxlength="41" name="fName" value="CA-RDP" class="form-control" autocomplete="off" oninvalid="this.setCustomValidity('Doldurulması zorunlu alan')" oninput="setCustomValidity('')"/>
-    <div class="form-text">
-    RDP dosyasını hangi isimle oluşturmak istersin?
-    </div>
-  </div>
-  <button type="submit" class="btn btn-primary btn-block mb-4">RDP Dosyası Oluştur</button>
-</form>
-  </main>
-  <footer class="mt-auto text-white-50">
-    <hr>
-    <div class="form-text">
-      v1
-    </div>
-  </footer>
-</div>
   </body>
 </html>
