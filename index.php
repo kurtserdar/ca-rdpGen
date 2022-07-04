@@ -1,8 +1,15 @@
 <?php
 if (isset($_POST['fName'])){
 $handle = fopen($_POST['fName'] . ".rdp", "w");
-fwrite($handle, "alternate shell:s:psm /u " . $_POST['pUser'] . " /a " . $_POST['dIP'] . " /c " . $_POST['componentControl']."\nconnection type:i:7\nfull address:s:".$_POST['psmControl']."\nusername:s:" . $_POST['cUser'] . "\nauthentication level:i:2\nenablecredsspsupport:i:1\nnegotiate security layer:i:1") or die ("Unable to open file!");
+if (isset($_POST['flexRadioDefault1'])){
+  fwrite($handle, "alternate shell:s:psm /u " . $_POST['pUser'] . $_POST['flexRadioDefault1'] . " /a " . $_POST['dIP'] . " /c " . $_POST['componentControl']."\nconnection type:i:7\nfull address:s:".$_POST['psmControl']."\nusername:s:" . $_POST['cUser'] . "\nauthentication level:i:2\nenablecredsspsupport:i:1\nnegotiate security layer:i:1") or die ("Unable to open file!");
+  fclose($handle);
+}
+else {
+  fwrite($handle, "alternate shell:s:psm /u " . $_POST['pUser'] . " /a " . $_POST['dIP'] . " /c " . $_POST['componentControl']."\nconnection type:i:7\nfull address:s:".$_POST['psmControl']."\nusername:s:" . $_POST['cUser'] . "\nauthentication level:i:2\nenablecredsspsupport:i:1\nnegotiate security layer:i:1") or die ("Unable to open file!");
 fclose($handle);
+}
+
 
 header('Content-Type: application/octet-stream');
 header('Content-Disposition: attachment; filename='.basename($_POST['fName'] . ".rdp"));
@@ -33,7 +40,7 @@ exit;
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- Style -->
     <link rel="stylesheet" href="css/style.css">
-    
+
     <style>
     .hover_img a { position:relative; }
     .hover_img a span { position:absolute; display:none; z-index:99; }
@@ -43,7 +50,7 @@ exit;
 
     <title>RDPGen</title>
   </head>
-  
+
   <body>
   <div class="content">
     <div class="container">
@@ -58,20 +65,40 @@ exit;
                   <input type="text" class="form-control" name="cUser" id="cUser" placeholder="" required>
                   <div class="hover_img">
                     <small>
-                      CyberArk hesabınız sahibinden.com.local domain hesabı olmak ile birlikte genelde format <b>"ad.soyad"</b>
+                      CyberArk hesabınız acme.local domain hesabı olmak ile birlikte genelde format <b>ad.soyad</b>
                       şeklindedir.
                     <a href="#">Örnek<span><img src="images/CyberArk-1.png" alt="image" height="400" /></span></a></small>
                   </div>
                 </div>
-                
+
                 <div class="col-md-12 form-group mb-3">
                   <label for="" class="col-form-label">Sunucu Hesabı</label>
-                  <input type="text" class="form-control" name="pUser" id="pUser" placeholder="" required>  
+                  <input type="text" class="form-control" name="pUser" id="pUser" placeholder="" required>
+                  <br>
+                  <div class="col-md-12 form-group mb-3">
+                    <div class="form-row">
+                      <div class="col">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault1" value="@acme.local" id="flexRadioDefault1" checked>
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      <small>Sahibinden</small>
+                      </div>
+                      <div class="col">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault1" value="@acmetest.local" id="flexRadioDefault1">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      <small>Sahitestbox</small>
+                      </div>
+                      <div class="col">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault1" value="" id="flexRadioDefault1">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      <small>Lokal</small>
+                    </div>
+                    </div>
+                </div>
                     <div class="hover_img">
                       <small>
                       Hedef sunucuya bağlanırken kullandığınız ayrıcalıklı hedef hesabıdır. CyberArk kasasında saklanmaktadır.
-                      Eğer ilgili hesap domain hesabı ise <b>hesap@sahibinden.com.local</b> formatında girilmelidir.
-                      <a href="#">Örnek<span><img src="images/CyberArk-2.png" alt="image" height="150" /></span></a></small>
+                      Eğer ilgili hesap domain hesabı ise <b>Acme ya da Acmetest</b> işaretli olmalıdır.
+                      <a href="#">Örnek<span><img src="images/CyberArk-2.png" alt="image" height="150" /></span></a></small>    
                     </div>
                   </div>
                 </div>
@@ -119,20 +146,20 @@ exit;
                 <div class="col-md-12 form-group mb-3">
                   <label class="col-form-label">PSM Sunucuları</label>
                   <select name="psmControl" class="form-control">
-                    <option value="1.1.1.1">PSM 1</option>
-                    <option value="1.1.1.2">PSM 2</option>
-                    <option value="1.1.1.3">PSM 3</option>
-                    <option value="1.1.1.4">PSM 4</option>
+                    <option value="1.1.1.1">A PSM</option>
+                    <option value="2.2.2.2">B PSM</option>
+                    <option value="3.3.3.3">C PSM</option>
+                    <option value="4.4.4.4">D PSM</option>
                   </select>
                   <div class="form-text">
                     <small>
-                    Hangi CyberArk proxy sunucusu üzerinden bağlantı sağlanacak? <b>(Web Uygulamaları için Bostancı seçilmelidir.)</b>
+                    Hangi CyberArk proxy sunucusu üzerinden bağlantı sağlanacak?
                     </small>
                  </div>
                 </div>
                 <div class="col-md-12 form-group mb-3">
-                  <label for="" class="col-form-label">Dosya Adı *</label>
-                    <input type="text" class="form-control" name="fName" id="fName" placeholder="" required>
+                  <label for="" class="col-form-label">Dosya Adı</label>
+                    <input type="text" class="form-control" name="fName" id="fName" placeholder="" value="" required>
                     <div class="form-text">
                     <small>
                     RDP dosyasını hangi isimle oluşturmak istersin?
@@ -144,15 +171,17 @@ exit;
                 <div class="col-md-5 form-group text-center">
                   <input type="submit" value="RDP Dosyası Oluştur" class="btn btn-block btn-primary rounded-0 py-2 px-10">
                 </div>
-                
+
               </div>
             </form>
           </div>
+          <p><center><small>infosec@acme.com</small></center></p>
         </div>
+        
       </div>
     </div>
   </div>
-    
+
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
